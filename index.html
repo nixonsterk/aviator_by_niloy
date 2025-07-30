@@ -7,11 +7,11 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
     @keyframes fly {
-      0% { transform: translateY(0) rotate(-10deg); }
-      100% { transform: translateY(-250px) rotate(-10deg); }
+      0% { transform: translateY(-60px) rotate(0deg); }
+      100% { transform: translateY(-170px) rotate(-20deg); }
     }
     .plane-animation {
-      animation: fly 3s linear forwards;
+      animation: fly 2s linear forwards;
     }
   </style>
 </head>
@@ -29,8 +29,8 @@
   <div class="flex flex-col items-center mb-6">
     <div class="text-2xl font-mono mb-2">Countdown: <span id="countdown">5</span></div>
     <div class="relative w-64 h-64 bg-blue-200 rounded overflow-hidden">
-      <img id="plane" src="plane.png" alt="plane" class="absolute bottom-0 hidden transition-transform duration-1000" style="width:80px; left:40%; transform:translateX(-40%);" />
-      <img id="burst" src="burst.png" alt="burst" class="absolute hidden" style="width:80px; left:50%; transform:translateX(-50%) translateY(20px);" />
+      <img id="plane" src="plane.png" alt="plane" class="absolute bottom-0 hidden transition-transform duration-1000" style="width:80px; left:40%; transform:translateX(-60%);" />
+      <img id="burst" src="burst.png" alt="burst" class="absolute hidden" style="width:80px; left:50%; transform:translateX(-30%) translateY(70px);" />
     </div>
     <div class="text-xl mt-2">Flight Time: <span id="timer">0.0</span> sec</div>
   </div>
@@ -43,7 +43,7 @@
 
   <script>
     let money = 10000;
-    let countdownTime = 5;
+    let countdownTime = 2;
     let countdownInterval, flightInterval;
     let isFlying = false;
     let timer = 0;
@@ -77,7 +77,7 @@
     }
 
     function startCountdown() {
-      countdownTime = 5;
+      countdownTime = 3;
       countdownEl.textContent = countdownTime;
       countdownInterval = setInterval(() => {
         countdownTime--;
@@ -103,7 +103,7 @@
         canEndBet = true;
       }
 
-      const maxTime = Math.random() * 20 + 5; // Random flight time
+      const maxTime = Math.random() * 10  + Math.random() * 10 ; // andom flight time
 
       flightInterval = setInterval(() => {
         timer += 0.1;
