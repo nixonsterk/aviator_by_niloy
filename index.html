@@ -8,10 +8,10 @@
   <style>
     @keyframes fly {
       0% { transform: translateY(0) rotate(-10deg); }
-      100% { transform: translateY(-300px) rotate(-10deg); }
+      100% { transform: translateY(-250px) rotate(-10deg); }
     }
     .plane-animation {
-      animation: fly linear forwards;
+      animation: fly 3s linear forwards;
     }
   </style>
 </head>
@@ -28,9 +28,9 @@
   <!-- Aviator Window -->
   <div class="flex flex-col items-center mb-6">
     <div class="text-2xl font-mono mb-2">Countdown: <span id="countdown">5</span></div>
-    <div class="relative w-64 h-64 bg-blue-200 rounded overflow-hidden flex justify-center items-end">
-      <img id="plane" src="plane.png" alt="plane" class="hidden" style="position:absolute; bottom:0; width:80px;" />
-      <img id="burst" src="burst.png" alt="burst" class="hidden" style="position:absolute; bottom:0; width:80px;" />
+    <div class="relative w-64 h-64 bg-blue-200 rounded overflow-hidden">
+      <img id="plane" src="plane.png" alt="plane" class="absolute bottom-0 hidden transition-transform duration-1000" style="width:80px; left:50%; transform:translateX(-50%);" />
+      <img id="burst" src="burst.png" alt="burst" class="absolute hidden" style="width:80px; left:50%; transform:translateX(-50%) translateY(20px);" />
     </div>
     <div class="text-xl mt-2">Flight Time: <span id="timer">0.0</span> sec</div>
   </div>
@@ -93,10 +93,9 @@
       isFlying = true;
       timer = 0;
       timerEl.textContent = "0.0";
-      planeImg.style.bottom = "0px";
-      planeImg.classList.add("plane-animation");
       planeImg.classList.remove("hidden");
       burstImg.classList.add("hidden");
+      planeImg.classList.add("plane-animation");
 
       if (betPlaced) {
         money -= 100;
@@ -104,7 +103,7 @@
         canEndBet = true;
       }
 
-      const maxTime = (Math.random() * 20 + 5); // max 2-3x mostly
+      const maxTime = Math.random() * 20 + 5; // Random flight time
 
       flightInterval = setInterval(() => {
         timer += 0.1;
@@ -122,6 +121,7 @@
       canEndBet = false;
       betPlaced = false;
       planeImg.classList.add("hidden");
+      planeImg.classList.remove("plane-animation");
       burstImg.classList.remove("hidden");
 
       setTimeout(() => {
