@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Aviator Game Demo</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    @keyframes fly {
+      0% { transform: translateY(0) rotate(-10deg); }
+      100% { transform: translateY(-300px) rotate(-10deg); }
+    }
+    .plane-animation {
+      animation: fly linear forwards;
+    }
+  </style>
+</head>
+<body class="bg-gray-900 text-white font-sans p-4">
+  <!-- Money Counter -->
+  <div class="flex justify-center items-center gap-4 mb-6">
+    <div class="bg-gray-800 p-4 rounded shadow-md text-center">
+      <p class="text-lg font-semibold">Money</p>
+      <p id="money" class="text-2xl font-bold text-green-400">10000</p>
+    </div>
+    <button onclick="resetMoney()" class="bg-red-500 hover:bg-red-600 px-4 py-2 rounded">Reset</button>
+  </div>
+
+  <!-- Aviator Window -->
+  <div class="flex flex-col items-center mb-6">
+    <div class="text-2xl font-mono mb-2">Countdown: <span id="countdown">5</span></div>
+    <div class="relative w-64 h-64 bg-blue-200 rounded overflow-hidden flex justify-center items-end">
+      <img id="plane" src="plane.png" alt="plane" class="hidden" style="position:absolute; bottom:0; width:80px;" />
+      <img id="burst" src="burst.png" alt="burst" class="hidden" style="position:absolute; bottom:0; width:80px;" />
+    </div>
+    <div class="text-xl mt-2">Flight Time: <span id="timer">0.0</span> sec</div>
+  </div>
+
+  <!-- Controls -->
+  <div class="flex justify-center gap-4">
+    <button onclick="placeBet()" id="betBtn" class="bg-yellow-400 text-black px-4 py-2 rounded font-semibold">Place Bet</button>
+    <button onclick="endBet()" id="endBtn" class="bg-green-500 px-4 py-2 rounded font-semibold">End Bet</button>
+  </div>
+
+  <script>
+    let money = 10000;
+    let countdownTime = 5;
+    let countdownInterval, flightInterval;
+    let isFlying = false;
+    let timer = 0;
+    let betPlaced = false;
+    let canEndBet = false;
+
+    const moneyEl = document.getElementById("money");
+    const countdownEl = document.getElementById("countdown");
+    const timerEl = document.getElementById("timer");
+    const planeImg = document.getElementById("plane");
+    const burstImg = document.getElementById("burst");
+
+    function resetMoney() {
+      money = 10000;
+      moneyEl.textContent = money;
+    }
+
+    function placeBet() {
+      if (!isFlying && !betPlaced && countdownTime <= 5) {
+        betPlaced = true;
+      }
+    }
+
+    function endBet() {
+      if (isFlying && canEndBet) {
+        const payout = Math.floor(100 * (timer / 10));
+        money += payout;
+        moneyEl.textContent = money;
+        canEndBet = false;
+      }
+    }
+
+    function startCountdown() {
+      countdownTime = 5;
+      countdownEl.textContent = countdownTime;
+      countdownInterval = setInterval(() => {
+        countdownTime--;
+        countdownEl.textContent = countdownTime;
+        if (countdownTime === 0) {
+          clearInterval(countdownInterval);
+          startFlight();
+        }
+      }, 1000);
+    }
+
+    function startFlight() {
+      isFlying = true;
+      timer = 0;
+      timerEl.textContent = "0.0";
+      planeImg.style.bottom = "0px";
+      planeImg.classList.add("plane-animation");
+      planeImg.classList.remove("hidden");
+      burstImg.classList.add("hidden");
+
+      if (betPlaced) {
+        money -= 100;
+        moneyEl.textContent = money;
+        canEndBet = true;
+      }
+
+      const maxTime = (Math.random() * 20 + 5); // max 2-3x mostly
+
+      flightInterval = setInterval(() => {
+        timer += 0.1;
+        timerEl.textContent = timer.toFixed(1);
+
+        if (timer >= maxTime) {
+          endFlight();
+        }
+      }, 100);
+    }
+
+    function endFlight() {
+      clearInterval(flightInterval);
+      isFlying = false;
+      canEndBet = false;
+      betPlaced = false;
+      planeImg.classList.add("hidden");
+      burstImg.classList.remove("hidden");
+
+      setTimeout(() => {
+        burstImg.classList.add("hidden");
+        startCountdown();
+      }, 1500);
+    }
+
+    // Initial start
+    startCountdown();
+  </script>
+</body>
+</html>
